@@ -27,6 +27,7 @@ import javax.validation.constraints.DecimalMin;
 
 public class MonetaryAmountDecimalMinValidator extends MonetaryAmountDecimalValidator<DecimalMin> {
 
+    @SuppressWarnings("unused")
     public MonetaryAmountDecimalMinValidator() {
         this(defaultValidator());
     }

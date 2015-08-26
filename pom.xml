@@ -53,6 +53,19 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>2.2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>2.2.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -171,10 +184,6 @@
                     <threadCount>1</threadCount>
                     <perCoreThreadCount>true</perCoreThreadCount>
                     <failIfNoTests>true</failIfNoTests>
-                    <excludes>
-                        <exclude>**/IT*.java</exclude>
-                        <exclude>**/IntegrationTest*.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

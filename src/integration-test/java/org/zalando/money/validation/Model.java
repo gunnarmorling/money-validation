@@ -20,24 +20,17 @@ package org.zalando.money.validation;
  * #L%
  */
 
-import org.hibernate.validator.internal.constraintvalidators.bv.DecimalMaxValidatorForNumber;
 
-import javax.validation.ConstraintValidator;
+import javax.money.MonetaryAmount;
 import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 
-public class MonetaryAmountDecimalMaxValidator extends MonetaryAmountDecimalValidator<DecimalMax> {
+class Model {
 
-    @SuppressWarnings("unused")
-    public MonetaryAmountDecimalMaxValidator() {
-        this(defaultValidator());
-    }
+    @DecimalMin("0")
+    public MonetaryAmount amount1;
 
-    public MonetaryAmountDecimalMaxValidator(final ConstraintValidator<DecimalMax, Number> validator) {
-        super(validator);
-    }
-
-    private static ConstraintValidator<DecimalMax, Number> defaultValidator() {
-        return new DecimalMaxValidatorForNumber();
-    }
+    @DecimalMax(value = "0", inclusive = false)
+    public MonetaryAmount amount2;
 
 }
