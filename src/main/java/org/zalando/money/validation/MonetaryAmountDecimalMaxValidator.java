@@ -20,24 +20,33 @@ package org.zalando.money.validation;
  * #L%
  */
 
-import org.hibernate.validator.internal.constraintvalidators.bv.DecimalMaxValidatorForNumber;
-
+import javax.money.MonetaryAmount;
 import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.DecimalMax;
+import java.math.BigDecimal;
 
-public class MonetaryAmountDecimalMaxValidator extends MonetaryAmountDecimalValidator<DecimalMax> {
+public class MonetaryAmountDecimalMaxValidator implements ConstraintValidator<DecimalMax, MonetaryAmount> {
 
-    @SuppressWarnings("unused")
-    public MonetaryAmountDecimalMaxValidator() {
-        this(defaultValidator());
+    private BigDecimal maxValue;
+
+    private boolean inclusive;
+
+    @Override
+    public void initialize(final DecimalMax annotation) {
+        this.maxValue = new BigDecimal(annotation.value());
+        this.inclusive = annotation.inclusive();
     }
 
-    public MonetaryAmountDecimalMaxValidator(final ConstraintValidator<DecimalMax, Number> validator) {
-        super(validator);
-    }
+    @Override
+    public boolean isValid(final MonetaryAmount value, final ConstraintValidatorContext context) {
+        // null values are valid
+        if (value == null) {
+            return true;
+        }
 
-    private static ConstraintValidator<DecimalMax, Number> defaultValidator() {
-        return new DecimalMaxValidatorForNumber();
+        final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
+        int comparisonResult = amount.compareTo(maxValue);
+        return inclusive ? comparisonResult <= 0 : comparisonResult < 0;
     }
-
 }

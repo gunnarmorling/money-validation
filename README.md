@@ -1,6 +1,19 @@
 # Money Validation
 
-Validating MonetaryAmounts with Hibernate Validators.
+Validation support for `javax.money.MonetaryAmount` using the `javax.validation` constraints `DecimalMin` and `DecimalMax`.
+
+## Usage
+
+Use `DecimalMin` and `DecimalMax` on your fields of type `javax.money.MonetaryAmount`. The validators are automatically 
+registered by your validation framework using SPI.
+
+    class Model {
+        @DecimalMin("0")
+        public MonetaryAmount amount1;
+    
+        @DecimalMax(value = "0", inclusive = false)
+        public MonetaryAmount amount2;
+    }
 
 ## License
 

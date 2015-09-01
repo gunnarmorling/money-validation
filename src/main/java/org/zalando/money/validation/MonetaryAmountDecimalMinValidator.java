@@ -20,24 +20,34 @@ package org.zalando.money.validation;
  * #L%
  */
 
-import org.hibernate.validator.internal.constraintvalidators.bv.DecimalMinValidatorForNumber;
-
+import javax.money.MonetaryAmount;
 import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
 
-public class MonetaryAmountDecimalMinValidator extends MonetaryAmountDecimalValidator<DecimalMin> {
+public class MonetaryAmountDecimalMinValidator implements ConstraintValidator<DecimalMin, MonetaryAmount> {
 
-    @SuppressWarnings("unused")
-    public MonetaryAmountDecimalMinValidator() {
-        this(defaultValidator());
+    private BigDecimal minValue;
+
+    private boolean inclusive;
+
+    @Override
+    public void initialize(final DecimalMin annotation) {
+        this.minValue = new BigDecimal(annotation.value());
+        this.inclusive = annotation.inclusive();
     }
 
-    public MonetaryAmountDecimalMinValidator(final ConstraintValidator<DecimalMin, Number> validator) {
-        super(validator);
-    }
+    @Override
+    public boolean isValid(final MonetaryAmount value, final ConstraintValidatorContext context) {
+        // null values are valid
+        if (value == null) {
+            return true;
+        }
 
-    private static ConstraintValidator<DecimalMin, Number> defaultValidator() {
-        return new DecimalMinValidatorForNumber();
+        final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
+        int comparisonResult = amount.compareTo(minValue);
+        return inclusive ? comparisonResult >= 0 : comparisonResult > 0;
     }
 
 }

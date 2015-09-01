@@ -21,74 +21,68 @@ package org.zalando.money.validation;
  */
 
 import org.javamoney.moneta.Money;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.money.MonetaryAmount;
-import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MonetaryAmountDecimalValidatorTest {
+public class MonetaryAmountDecimalMinValidatorTest {
 
-    @Mock
-    private ConstraintValidator<DecimalMax, Number> validator;
-
-    private MonetaryAmountDecimalValidator<DecimalMax> unit;
-
-    @Before
-    public void setUp() {
-        unit = new MonetaryAmountDecimalValidator<>(validator);
-    }
-
-    @Test
-    public void initializesValidator() {
-        final DecimalMax annotation = decimalMax("0");
-
-        unit.initialize(annotation);
-
-        verify(validator).initialize(annotation);
-    }
+    private final MonetaryAmountDecimalMinValidator unit = new MonetaryAmountDecimalMinValidator();
 
     @Test
     public void nullIsValid() {
-        unit.initialize(decimalMax("0"));
+        unit.initialize(decimalMin("0"));
 
         final boolean valid = unit.isValid(null, context());
 
         assertThat(valid, is(true));
-        verify(validator, never()).isValid(any(), any());
     }
 
     @Test
-    public void validatesOnBigDecimal() {
-        final MonetaryAmount money = euro("2");
-        final ConstraintValidatorContext context = context();
+    public void invalidIfLess() {
+        unit.initialize(decimalMin("0", true));
+        final boolean valid = unit.isValid(euro("-1"), context());
 
-        unit.isValid(money, context);
-
-        verify(validator).isValid(money.getNumber().numberValue(BigDecimal.class), context);
+        assertThat(valid, is(false));
     }
 
     @Test
-    public void validatesViaValidator() {
-        when(validator.isValid(any(), any())).thenReturn(true);
+    public void validIfGreater() {
+        unit.initialize(decimalMin("0", true));
+        final boolean valid = unit.isValid(euro("1"), context());
 
-        final boolean valid = unit.isValid(euro("2"), context());
+        assertThat(valid, is(true));
+    }
+
+    @Test
+    public void validIfInclude() {
+        unit.initialize(decimalMin("0", true));
+        final boolean valid = unit.isValid(euro("0"), context());
+
+        assertThat(valid, is(true));
+    }
+
+    @Test
+    public void invalidIfNotInclude() {
+        unit.initialize(decimalMin("0", false));
+        final boolean valid = unit.isValid(euro("0"), context());
+
+        assertThat(valid, is(false));
+    }
+
+    @Test
+    public void validIfGreaterAndNotIncluded() {
+        unit.initialize(decimalMin("0", false));
+        final boolean valid = unit.isValid(euro("1"), context());
 
         assertThat(valid, is(true));
     }
@@ -97,6 +91,7 @@ public class MonetaryAmountDecimalValidatorTest {
     public void ignoresContext() {
         final ConstraintValidatorContext context = context();
 
+        unit.initialize(decimalMin("0"));
         unit.isValid(euro("2"), context);
 
         verifyNoMoreInteractions(context);
@@ -110,12 +105,12 @@ public class MonetaryAmountDecimalValidatorTest {
         return mock(ConstraintValidatorContext.class);
     }
 
-    private DecimalMax decimalMax(final String value) {
-        return decimalMax(value, true);
+    private DecimalMin decimalMin(final String value) {
+        return decimalMin(value, true);
     }
 
-    private DecimalMax decimalMax(final String value, final boolean inclusive) {
-        DecimalMax annotation = mock(DecimalMax.class);
+    private DecimalMin decimalMin(final String value, final boolean inclusive) {
+        DecimalMin annotation = mock(DecimalMin.class);
         when(annotation.value()).thenReturn(value);
         when(annotation.inclusive()).thenReturn(inclusive);
         return annotation;
