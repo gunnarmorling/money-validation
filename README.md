@@ -1,5 +1,10 @@
 # Money Validation
 
+[![Build Status](https://img.shields.io/travis/zalando/money-validation.svg)](https://travis-ci.org/zalando/money-validation)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/money-validation.svg)](https://coveralls.io/r/zalando/money-validation)
+[![Release](https://img.shields.io/github/release/zalando/money-validation.svg)](https://github.com/zalando/money-validation/releases)
+[![Maven Central](https://img.shields.io/maven-central/v/org.zalando/money-validation.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/money-validation)
+
 Validation support for `javax.money.MonetaryAmount` using the `javax.validation` constraints `DecimalMin` and `DecimalMax`.
 
 ## Usage
