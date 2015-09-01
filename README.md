@@ -21,7 +21,7 @@ class Model {
     @DecimalMax(value = "0", inclusive = false)
     public MonetaryAmount amount2;
         
-    }
+}
 ```
 
 ## License
