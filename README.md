@@ -1,5 +1,7 @@
 # Money Validation
 
+[![Money magnifier](docs/money-validation.jpg)](https://pixabay.com/en/coins-handful-russia-ruble-kopek-650779/)
+
 [![Build Status](https://img.shields.io/travis/zalando/money-validation.svg)](https://travis-ci.org/zalando/money-validation)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/money-validation.svg)](https://coveralls.io/r/zalando/money-validation)
 [![Release](https://img.shields.io/github/release/zalando/money-validation.svg)](https://github.com/zalando/money-validation/releases)
