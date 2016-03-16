@@ -149,7 +149,6 @@
                     <compilerArgs>
                         <compilerArg>-Xlint:unchecked</compilerArg>
                         <compilerArg>-Werror</compilerArg>
-                        <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
                 </configuration>
             </plugin>
