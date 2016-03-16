@@ -23,18 +23,16 @@ package org.zalando.money.validation;
 import javax.money.MonetaryAmount;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.Max;
 import java.math.BigDecimal;
 
-public final class MonetaryAmountDecimalMaxValidator implements ConstraintValidator<DecimalMax, MonetaryAmount> {
+public final class MonetaryAmountMaxValidator implements ConstraintValidator<Max, MonetaryAmount> {
 
     private BigDecimal maxValue;
-    private boolean inclusive;
 
     @Override
-    public void initialize(final DecimalMax annotation) {
-        this.maxValue = new BigDecimal(annotation.value());
-        this.inclusive = annotation.inclusive();
+    public void initialize(final Max annotation) {
+        this.maxValue = BigDecimal.valueOf(annotation.value());
     }
 
     @Override
@@ -45,8 +43,7 @@ public final class MonetaryAmountDecimalMaxValidator implements ConstraintValida
         }
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
-        int result = amount.compareTo(maxValue);
-        return inclusive ? result <= 0 : result < 0;
+        return amount.compareTo(maxValue) <= 0;
     }
 
 }
