@@ -45,17 +45,17 @@ The validators are automatically registered by your validation framework using S
 
 Use constraint annotations on your fields of type `javax.money.MonetaryAmount` with any of the following constraints:
 
-| Constraint                                     | Condition  |
-|------------------------------------------------|------------|
-| `@javax.validation.constraints.Min`            | `x <= n`   |
-| `@javax.validation.constraints.Max`            | `x <= n`   |
-| `@javax.validation.constraints.DecimalMin`     | `x </<= n` |
-| `@javax.validation.constraints.DecimalMax`     | `x >/>= n` |
-| `@org.zalando.money.validation.Positive`       | `x > 0`    |
-| `@org.zalando.money.validation.PositiveOrZero` | `x >= 0`   |
-| `@org.zalando.money.validation.Negative`       | `x < 0`    |
-| `@org.zalando.money.validation.NegativeOrZero` | `x <= 0`   |
-| `@org.zalando.money.validation.Zero`           | `x = 0`    |
+| Official | Constraint        | Condition  |
+|----------|-------------------|------------|
+| yes      | `@Min`            | `x <= n`   |
+| yes      | `@Max`            | `x <= n`   |
+| yes      | `@DecimalMin`     | `x </<= n` |
+| yes      | `@DecimalMax`     | `x >/>= n` |
+| no       | `@Positive`       | `x > 0`    |
+| no       | `@PositiveOrZero` | `x >= 0`   |
+| no       | `@Negative`       | `x < 0`    |
+| no       | `@NegativeOrZero` | `x <= 0`   |
+| no       | `@Zero`           | `x = 0`    |
 
 ```java
 class Product {
