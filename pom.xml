@@ -59,32 +59,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.money</groupId>
-            <artifactId>money-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.2.1.Final</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.javamoney</groupId>
-            <artifactId>moneta</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.1.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -326,6 +315,7 @@
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta-bp</artifactId>
                     <version>${java-money.version}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
@@ -344,6 +334,7 @@
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
                     <version>${java-money.version}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
