@@ -32,7 +32,6 @@ import java.math.BigDecimal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class MonetaryAmountDecimalMaxValidatorTest {
@@ -88,16 +87,6 @@ public class MonetaryAmountDecimalMaxValidatorTest {
         assertThat(valid, is(true));
     }
 
-    @Test
-    public void ignoresContext() {
-        final ConstraintValidatorContext context = context();
-
-        unit.initialize(decimalMax("0"));
-        unit.isValid(euro("2"), context);
-
-        verifyNoMoreInteractions(context);
-    }
-
     private MonetaryAmount euro(final String value) {
         return Money.of(new BigDecimal(value), "EUR");
     }
@@ -111,7 +100,7 @@ public class MonetaryAmountDecimalMaxValidatorTest {
     }
 
     private DecimalMax decimalMax(final String value, final boolean inclusive) {
-        DecimalMax annotation = mock(DecimalMax.class);
+        final DecimalMax annotation = mock(DecimalMax.class);
         when(annotation.value()).thenReturn(value);
         when(annotation.inclusive()).thenReturn(inclusive);
         return annotation;
