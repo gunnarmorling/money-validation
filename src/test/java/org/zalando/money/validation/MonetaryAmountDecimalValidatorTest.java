@@ -20,7 +20,6 @@ package org.zalando.money.validation;
  * #L%
  */
 
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import org.javamoney.moneta.Money;
@@ -44,10 +43,6 @@ public class MonetaryAmountDecimalValidatorTest {
 
     private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private static boolean ofInvalid(final ConstraintViolation<Model> violation, final Object value) {
-        return violation.getInvalidValue().equals(value);
-    }
-    
     private static Predicate<ConstraintViolation<Model>> rejected(final Object value) {
         return new Predicate<ConstraintViolation<Model>>() {
 
