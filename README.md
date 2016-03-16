@@ -7,37 +7,65 @@
 [![Release](https://img.shields.io/github/release/zalando/money-validation.svg)](https://github.com/zalando/money-validation/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/money-validation.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/money-validation)
 
-Validation support for `javax.money.MonetaryAmount` using the `javax.validation` constraints `DecimalMin` and `DecimalMax`.
+*Money Validation* is a collection of [Bean Validation](http://beanvalidation.org/) constraint validators that add
+support for [Java Money](https://github.com/JavaMoney/jsr354-api) data types when using `@Min`, `@Max`, `@DecimalMin` 
+and `@DecimalMax` constraints.
 
-## Usage
+## Features
 
-Use `DecimalMin` and `DecimalMax` on your fields of type `javax.money.MonetaryAmount`. The validators are automatically 
+# Getting started
+
+## Requirements
+- Java 7 or 8
+- Any build tool using Maven Central, or direct download
+- A Bean Validation 1.1 compatible implementation, e.g. [Hibernate Validator](http://hibernate.org/validator)
+- Java Money 1.0
+
+## Dependencies
+
+Use this library:
+
+```xml
+<dependency>
+    <groupId>org.zalando</groupId>
+    <artifactId>money-validation</artifactId>
+    <version>${money-validation.version}</version>
+</dependency>
+```
+
+For ultimate flexibility, this module is compatible with the official version as well as the backport of Java Money.
+The actual version will be selected by a profile based on the current JDK version.
+
+## Using It
+
+Use constraint annotations on your fields of type `javax.money.MonetaryAmount`. The validators are automatically 
 registered by your validation framework using SPI.
 
 ```java
-class Model {
+class Product {
 
-    @DecimalMin("0")
-    public MonetaryAmount amount1;
+    @Min(0)
+    private MonetaryAmount price;
     
-    @DecimalMax(value = "0", inclusive = false)
-    public MonetaryAmount amount2;
+    @Max(0)
+    private MonetaryAmount discount;
         
 }
 ```
 
-## License
+```java
+class Product {
 
-Copyright [2015] Zalando SE
+    @DecimalMin("0", inclusive = false)
+    private MonetaryAmount price;
+    
+    @DecimalMax(value = "0")
+    private MonetaryAmount discount;
+        
+}
+```
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+## Contributing
+To contribute to Money Validation, simply make a pull request and add a brief description (1-2 sentences) of your
+addition or change. Please note that we aim to keep this project straightforward and focused. We are not looking to add
+lots of features; we just want it to keep doing what it does, as well and as powerfully as possible.
