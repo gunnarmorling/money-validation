@@ -23,6 +23,12 @@
             <organization>Zalando SE</organization>
             <organizationUrl>https://tech.zalando.com/</organizationUrl>
         </developer>
+        <developer>
+            <name>Willi Schönborn</name>
+            <email>willi.schoenborn@zalando.de</email>
+            <organization>Zalando SE</organization>
+            <organizationUrl>https://tech.zalando.com/</organizationUrl>
+        </developer>
     </developers>
 
     <scm>
@@ -34,8 +40,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
     <licenses>
@@ -102,18 +108,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hobsoft.hamcrest</groupId>
-            <artifactId>hamcrest-compose</artifactId>
-            <version>0.3.0</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>2.0.31-beta</version>
@@ -123,40 +117,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-integration-test-sources</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/integration-test/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-integration-test-resources</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>add-test-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <filtering>true</filtering>
-                                    <directory>src/integration-test/resources</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -200,7 +160,6 @@
                 <configuration>
                     <parallel>classesAndMethods</parallel>
                     <threadCount>1</threadCount>
-                    <perCoreThreadCount>true</perCoreThreadCount>
                     <failIfNoTests>true</failIfNoTests>
                 </configuration>
             </plugin>
