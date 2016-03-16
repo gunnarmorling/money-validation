@@ -24,6 +24,7 @@ import org.javamoney.moneta.Money;
 import org.junit.Test;
 
 import javax.money.MonetaryAmount;
+import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 public class MonetaryAmountDecimalMinValidatorTest {
 
-    private final MonetaryAmountDecimalMinValidator unit = new MonetaryAmountDecimalMinValidator();
+    private final ConstraintValidator<DecimalMin, MonetaryAmount> unit = new MonetaryAmountDecimalMinValidator();
 
     @Test
     public void nullIsValid() {

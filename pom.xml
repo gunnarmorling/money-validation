@@ -3,6 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <prerequisites>
+        <maven>3.0.4</maven>
+    </prerequisites>
+    
     <groupId>org.zalando</groupId>
     <artifactId>money-validation</artifactId>
     <version>1.1.0-SNAPSHOT</version>
@@ -23,6 +27,12 @@
             <organization>Zalando SE</organization>
             <organizationUrl>https://tech.zalando.com/</organizationUrl>
         </developer>
+        <developer>
+            <name>Willi Schönborn</name>
+            <email>willi.schoenborn@zalando.de</email>
+            <organization>Zalando SE</organization>
+            <organizationUrl>https://tech.zalando.com/</organizationUrl>
+        </developer>
     </developers>
 
     <scm>
@@ -34,8 +44,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <java-money.version>1.0</java-money.version>
     </properties>
 
     <licenses>
@@ -48,26 +59,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.money</groupId>
-            <artifactId>money-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.2.1.Final</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.javamoney</groupId>
-            <artifactId>moneta</artifactId>
-            <version>1.0</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.1.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -102,18 +108,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hobsoft.hamcrest</groupId>
-            <artifactId>hamcrest-compose</artifactId>
-            <version>0.3.0</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>2.0.31-beta</version>
@@ -124,43 +118,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-integration-test-sources</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/integration-test/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-integration-test-resources</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>add-test-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <filtering>true</filtering>
-                                    <directory>src/integration-test/resources</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>2.7</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -168,10 +128,10 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>update-file-header</goal>
                         </goals>
-                        <phase>process-sources</phase>
                     </execution>
                 </executions>
                 <configuration>
@@ -189,7 +149,6 @@
                     <compilerArgs>
                         <compilerArg>-Xlint:unchecked</compilerArg>
                         <compilerArg>-Werror</compilerArg>
-                        <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -200,28 +159,8 @@
                 <configuration>
                     <parallel>classesAndMethods</parallel>
                     <threadCount>1</threadCount>
-                    <perCoreThreadCount>true</perCoreThreadCount>
                     <failIfNoTests>true</failIfNoTests>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <parallel>classesAndMethods</parallel>
-                    <threadCount>1</threadCount>
-                    <perCoreThreadCount>true</perCoreThreadCount>
-                    <failIfNoTests>true</failIfNoTests>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -279,11 +218,6 @@
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.8</version>
             </plugin>
             <plugin>
                 <artifactId>maven-scm-plugin</artifactId>
@@ -365,6 +299,44 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>jdk7</id>
+            <activation>
+                <jdk>1.7</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.money</groupId>
+                    <artifactId>money-api-bp</artifactId>
+                    <version>${java-money.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.javamoney</groupId>
+                    <artifactId>moneta-bp</artifactId>
+                    <version>${java-money.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.money</groupId>
+                    <artifactId>money-api</artifactId>
+                    <version>${java-money.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.javamoney</groupId>
+                    <artifactId>moneta</artifactId>
+                    <version>${java-money.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 

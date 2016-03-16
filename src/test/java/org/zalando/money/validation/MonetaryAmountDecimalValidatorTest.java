@@ -20,7 +20,8 @@ package org.zalando.money.validation;
  * #L%
  */
 
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 
@@ -30,22 +31,26 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
-import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 
-public class MonetaryAmountDecimalValidatorIT {
+public class MonetaryAmountDecimalValidatorTest {
 
     private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private static boolean ofInvalid(final ConstraintViolation<Model> violation, final Object value) {
-        return violation.getInvalidValue().equals(value);
+    private static Predicate<ConstraintViolation<Model>> rejected(final Object value) {
+        return new Predicate<ConstraintViolation<Model>>() {
+
+            @Override
+            public boolean apply(final ConstraintViolation<Model> violation) {
+                return Objects.equals(violation.getInvalidValue(), value);
+            }
+        };
     }
 
     private static MonetaryAmount euro(final String value) {
@@ -69,16 +74,14 @@ public class MonetaryAmountDecimalValidatorIT {
         final Set<ConstraintViolation<Model>> violations = validator.validate(model);
         assertThat(violations, hasSize(1));
 
-        final ConstraintViolation<Model> violation1 = violations.stream()
-                .filter(v -> ofInvalid(v, model.amount1))
-                .findFirst().orElseThrow(() -> new AssertionError("Expected violation"));
+        final ConstraintViolation<Model> violation = FluentIterable.from(violations)
+                .firstMatch(rejected(model.amount1))
+                .get();
 
-        final Annotation annotation1 = violation1.getConstraintDescriptor().getAnnotation();
-        assertThat(annotation1.annotationType(), is(DecimalMin.class));
-        assertThat((DecimalMin) annotation1, allOf(
-                hasFeature("value", DecimalMin::value, is("0")),
-                hasFeature("inclusive", DecimalMin::inclusive, is(true))
-        ));
+        final DecimalMin decimalMin = (DecimalMin) violation.getConstraintDescriptor().getAnnotation();
+        
+        assertThat(decimalMin.value(), is("0"));
+        assertThat(decimalMin.inclusive(), is(true));
     }
 
     @Test
@@ -89,16 +92,14 @@ public class MonetaryAmountDecimalValidatorIT {
         final Set<ConstraintViolation<Model>> violations = validator.validate(model);
         assertThat(violations, hasSize(1));
 
-        final ConstraintViolation<Model> violation2 = violations.stream()
-                .filter(v -> ofInvalid(v, model.amount2))
-                .findFirst().orElseThrow(() -> new AssertionError("Expected violation"));
+        final ConstraintViolation<Model> violation = FluentIterable.from(violations)
+                .firstMatch(rejected(model.amount2))
+                .get();
 
-        final Annotation annotation2 = violation2.getConstraintDescriptor().getAnnotation();
-        assertThat(annotation2.annotationType(), is(DecimalMax.class));
-        assertThat((DecimalMax) annotation2, allOf(
-                hasFeature("value", DecimalMax::value, is("0")),
-                hasFeature("inclusive", DecimalMax::inclusive, is(false))
-        ));
+        final DecimalMax decimalMax = (DecimalMax) violation.getConstraintDescriptor().getAnnotation();
+        
+        assertThat(decimalMax.value(), is("0"));
+        assertThat(decimalMax.inclusive(), is(false));
     }
 
     @Test
@@ -110,4 +111,5 @@ public class MonetaryAmountDecimalValidatorIT {
         final Set<ConstraintViolation<Model>> violations = validator.validate(model);
         assertThat(violations, hasSize(0));
     }
+
 }

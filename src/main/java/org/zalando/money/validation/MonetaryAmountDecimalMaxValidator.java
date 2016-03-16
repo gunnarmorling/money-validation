@@ -26,10 +26,9 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.DecimalMax;
 import java.math.BigDecimal;
 
-public class MonetaryAmountDecimalMaxValidator implements ConstraintValidator<DecimalMax, MonetaryAmount> {
+public final class MonetaryAmountDecimalMaxValidator implements ConstraintValidator<DecimalMax, MonetaryAmount> {
 
     private BigDecimal maxValue;
-
     private boolean inclusive;
 
     @Override
@@ -46,7 +45,7 @@ public class MonetaryAmountDecimalMaxValidator implements ConstraintValidator<De
         }
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
-        int comparisonResult = amount.compareTo(maxValue);
-        return inclusive ? comparisonResult <= 0 : comparisonResult < 0;
+        int result = amount.compareTo(maxValue);
+        return inclusive ? result <= 0 : result < 0;
     }
 }
