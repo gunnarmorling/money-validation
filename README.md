@@ -8,10 +8,13 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/money-validation.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/money-validation)
 
 *Money Validation* is a collection of [Bean Validation](http://beanvalidation.org/) constraint validators that add
-support for [Java Money](https://github.com/JavaMoney/jsr354-api) data types when using `@Min`, `@Max`, `@DecimalMin` 
-and `@DecimalMax` constraints.
+support for [Java Money](https://github.com/JavaMoney/jsr354-api) data types.
 
 ## Features
+- enables you to validate monetary amounts
+- uses existing, standardized constraints
+- offers additional, more expressive custom constraints
+- can be use with any Bean Validation implementation
 
 # Getting started
 
@@ -36,30 +39,31 @@ Use this library:
 For ultimate flexibility, this module is compatible with the official version as well as the backport of Java Money.
 The actual version will be selected by a profile based on the current JDK version.
 
+The validators are automatically registered by your validation framework using SPI.
+
 ## Using It
 
-Use constraint annotations on your fields of type `javax.money.MonetaryAmount`. The validators are automatically 
-registered by your validation framework using SPI.
+Use constraint annotations on your fields of type `javax.money.MonetaryAmount` with any of the following constraints:
+
+| Official | Constraint        | Condition  |
+|----------|-------------------|------------|
+| yes      | `@Min`            | `x <= n`   |
+| yes      | `@Max`            | `x <= n`   |
+| yes      | `@DecimalMin`     | `x </<= n` |
+| yes      | `@DecimalMax`     | `x >/>= n` |
+| no       | `@Positive`       | `x > 0`    |
+| no       | `@PositiveOrZero` | `x >= 0`   |
+| no       | `@Negative`       | `x < 0`    |
+| no       | `@NegativeOrZero` | `x <= 0`   |
+| no       | `@Zero`           | `x = 0`    |
 
 ```java
 class Product {
 
-    @Min(0)
+    @Positive
     private MonetaryAmount price;
     
-    @Max(0)
-    private MonetaryAmount discount;
-        
-}
-```
-
-```java
-class Product {
-
-    @DecimalMin("0", inclusive = false)
-    private MonetaryAmount price;
-    
-    @DecimalMax(value = "0")
+    @NegativeOrZero
     private MonetaryAmount discount;
         
 }

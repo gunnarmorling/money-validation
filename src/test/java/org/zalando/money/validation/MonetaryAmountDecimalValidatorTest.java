@@ -20,8 +20,7 @@ package org.zalando.money.validation;
  * #L%
  */
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 
@@ -29,32 +28,30 @@ import javax.money.MonetaryAmount;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 
 public class MonetaryAmountDecimalValidatorTest {
 
     private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private static Predicate<ConstraintViolation<Model>> rejected(final Object value) {
-        return new Predicate<ConstraintViolation<Model>>() {
-
-            @Override
-            public boolean apply(final ConstraintViolation<Model> violation) {
-                return Objects.equals(violation.getInvalidValue(), value);
-            }
-        };
-    }
-
     private static MonetaryAmount euro(final String value) {
         return Money.of(new BigDecimal(value), "EUR");
+    }
+    
+    private void validate(final Product product, final MonetaryAmount invalid,
+            final String message) {
+
+        final Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        final ConstraintViolation<Product> violation = Iterables.getOnlyElement(violations);
+
+        assertThat(violation.getInvalidValue(), is(sameInstance((Object) invalid)));
+        assertThat(violation.getMessage(), is(message));
     }
 
     /**
@@ -63,53 +60,50 @@ public class MonetaryAmountDecimalValidatorTest {
      */
     @Test
     public void validatorsAreRegistered() {
-        validator.validate(new Model());
+        validator.validate(new Product(null, null, null, null, null));
     }
 
     @Test
-    public void violatingDecimalMin() {
-        final Model model = new Model();
-        model.amount1 = euro("-2");
+    public void violatingPositive() {
+        final Product product = new Product(euro("0"), null, null, null, null);
 
-        final Set<ConstraintViolation<Model>> violations = validator.validate(model);
-        assertThat(violations, hasSize(1));
+        validate(product, product.getPrice(), "must be greater than 0");
+    }
+    
+    @Test
+    public void violatingPositiveOrZero() {
+        final Product product = new Product(null, euro("-1"), null, null, null);
 
-        final ConstraintViolation<Model> violation = FluentIterable.from(violations)
-                .firstMatch(rejected(model.amount1))
-                .get();
+        validate(product, product.getDiscountedPrice(), "must be greater than or equal to 0");
+    }
+    
+    @Test
+    public void violatingNegativeOrZero() {
+        final Product product = new Product(null, null, euro("2"), null, null);
 
-        final DecimalMin decimalMin = (DecimalMin) violation.getConstraintDescriptor().getAnnotation();
-        
-        assertThat(decimalMin.value(), is("0"));
-        assertThat(decimalMin.inclusive(), is(true));
+        validate(product, product.getDiscount(), "must be less than or equal to 0");
     }
 
     @Test
-    public void violatingDecimalMax() {
-        final Model model = new Model();
-        model.amount2 = euro("2");
+    public void violatingNegative() {
+        final Product product = new Product(null, null, null, euro("1"), null);
 
-        final Set<ConstraintViolation<Model>> violations = validator.validate(model);
-        assertThat(violations, hasSize(1));
+        validate(product, product.getPriceReduction(), "must be less than 0");
+    }
+    
+    @Test
+    public void violatingZero() {
+        final Product product = new Product(null, null, null, null, euro("1"));
 
-        final ConstraintViolation<Model> violation = FluentIterable.from(violations)
-                .firstMatch(rejected(model.amount2))
-                .get();
-
-        final DecimalMax decimalMax = (DecimalMax) violation.getConstraintDescriptor().getAnnotation();
-        
-        assertThat(decimalMax.value(), is("0"));
-        assertThat(decimalMax.inclusive(), is(false));
+        validate(product, product.getTax(), "must be 0");
     }
 
     @Test
     public void noViolationsOnValidValue() {
-        final Model model = new Model();
-        model.amount1 = euro("2");
-        model.amount2 = euro("-2");
+        final Product product = new Product(euro("2"), euro("0"), euro("0"), euro("-2"), euro("0"));
 
-        final Set<ConstraintViolation<Model>> violations = validator.validate(model);
-        assertThat(violations, hasSize(0));
+        final Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        assertThat(violations, is(empty()));
     }
 
 }
