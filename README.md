@@ -11,22 +11,22 @@
 support for [Java Money](https://github.com/JavaMoney/jsr354-api) data types.
 
 ## Features
+
 - enables you to validate monetary amounts
 - uses existing, standardized constraints
 - offers additional, more expressive custom constraints
 - can be use with any Bean Validation implementation
 
-# Getting started
+## Dependencies
 
-## Requirements
 - Java 7 or 8
 - Any build tool using Maven Central, or direct download
 - A Bean Validation 1.1 compatible implementation, e.g. [Hibernate Validator](http://hibernate.org/validator)
 - Java Money 1.0
 
-## Dependencies
+## Installation
 
-Use this library:
+Add the following dependency to your project:
 
 ```xml
 <dependency>
@@ -41,7 +41,7 @@ The actual version will be selected by a profile based on the current JDK versio
 
 The validators are automatically registered by your validation framework using SPI.
 
-## Using It
+## Usage
 
 Use constraint annotations on your fields of type `javax.money.MonetaryAmount` with any of the following constraints:
 
@@ -69,7 +69,14 @@ class Product {
 }
 ```
 
-## Contributing
+## Getting help
+
+If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
+
+## Getting involved
+
 To contribute to Money Validation, simply make a pull request and add a brief description (1-2 sentences) of your
 addition or change. Please note that we aim to keep this project straightforward and focused. We are not looking to add
-lots of features; we just want it to keep doing what it does, as well and as powerfully as possible.
+lots of features; we just want it to keep doing what it does, as well and as powerfully as possible. For more details
+check the [contribution guidelines](CONTRIBUTING.md).
+
